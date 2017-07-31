@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Hangman</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  </head>
+  <body>
+    <div class="container">
+      <h1>Press Any Key To Get Started!</h1>
+      <h3>Wins = <span id="wins"><strong></strong></span></h3>
+      <h3>Current Word = <span id="word"><strong></strong></span></h3>
+      <h3>Letters Already Guessed = <span id="letters-guessed"><strong></strong></span></h3>
+      <h3>Number of Guesses Remaining = <span id="guess-remaining"><strong>13</strong></span></h3>
+    </div>
+
+    <script>
+
+    var myArray = ["nick", "rob", "brian"];
+    var word = document.getElementById('word');
+    var guess = document.getElementById('letters-guessed');
+    var guessRemaining = document.getElementById('guess-remaining');
+    var wins = document.getElementById('wins');
+    var wordArray = [];
+    var arrayCount = 0;
+    var guessCount = 13;
+    var guessArray = [];
+    var randomWord = myArray[getRandomNumber()];
+    console.log(randomWord);
+
+    appendWordArray(randomWord);
+    word.textContent = wordArray.join(" ");
+    guess.textContent = guessArray.join(" ");
+    wins.textContent = 0;
+    
+
+    function getRandomWord() {
+      var newWord = myArray[getRandomNumber()];
+      return newWord;
+      console.log(newWord);
+    }
+
+    function appendWordArray(str) {
+      for (i = 0; i < str.length; i++) {
+        wordArray.push("_ ");
+      }
+    }
+
+    function getRandomNumber() {
+      return Math.floor(Math.random() * myArray.length);
+    }
+
+    function resetGame() {
+      randomWord = getRandomWord();
+          
+      guessRemaining.textContent = 13;
+      guessCount = 14;
+      guessCount -= 1;
+      wordArray = [];
+      guessArray = [];
+
+      appendWordArray(randomWord);
+      console.log(randomWord);
+      
+      word.textContent = wordArray.join(" ");
+      guess.textContent = guessArray.join(" ");
+    }
+     
+
+    document.onkeyup = function(event) {
+
+        guessRemaining.textContent = guessCount;
+        guessCount -= 1;
+
+        var index = randomWord.indexOf(event.key);
+
+        if (randomWord.includes(event.key)) {
+
+          wordArray[index] = event.key;
+          word.textContent = wordArray.join(" ");
+          console.log(wordArray);
+
+        } else {
+
+          arrayCount += 1
+          guessArray[arrayCount - 1] = event.key;
+          guess.textContent = guessArray.join(" ");
+
+        }
+
+        if (wordArray.join("") === randomWord) {
+          alert('you win!');
+
+          // wins.textContent += 1;
+
+          resetGame();
+          
+        }
+
+        if (Number(guessRemaining.textContent) < 1) {
+          
+          alert('you lose!');
+
+          resetGame();
+
+        }
+      
+      
+
+      
+
+
+
+      // for (i = 0; i < dashArray.length; i++) {
+      //   dashArray[i] = event.key;
+      //   dashes.textContent = dashArray.join(" ");
+      // }
+
+      
+
+      // myGuess.textContent = event.key;
+      // cpuGuess.textContent = myArray[getRandomNumber()];
+      // var letterCount = cpuGuess.textContent.length;
+      // letters.textContent = letterCount;
+
+      // for (i = 0; i < cpuGuess.textContent.length; i++) {
+      //   dashArray.push("_ ");
+      // }
+      
+
+    }
+
+
+
+
+
+    // var w = 0;
+    // var l = 0;
+    // var t = 0;
+
+    // function getRandomNumber() {
+    //   return Math.floor(Math.random() * 3);
+    // }
+
+    // function updateGame(x, y, z) {
+    //   if (x === 'p' && y === 'r' || x === 'r' && y === 's' || x === 's' && y === 'p') {
+
+    //     w += 1;
+    //     document.getElementById('wins').innerHTML = w;
+        
+    //   } else if (x === 'p' && y === 's' || x === 'r' && y === 'p' || x === 's' && y === 'r') {
+
+    //     l += 1;
+    //     document.getElementById('losses').innerHTML = l;
+
+
+    //   } else {
+
+    //     t += 1;
+    //     document.getElementById('ties').innerHTML = t;
+
+    //   }
+      
+    // };
+
+
+    // document.onkeyup = function(event) {
+    //   myGuess.textContent = event.key;
+    //   cpuGuess.textContent = myArray[getRandomNumber()];
+
+    //   updateGame(myGuess.textContent, cpuGuess.textContent, t);
+
+    // };
+
+    </script>
+
+  </body>
+</html>
