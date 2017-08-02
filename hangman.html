@@ -8,7 +8,7 @@
   <body>
     <div class="container">
       <h1>Press Any Key To Get Started!</h1>
-      <h3>Wins = <span id="wins"><strong></strong></span></h3>
+      <h3>Wins = <text id="wins">0</text></h3>
       <h3>Current Word = <span id="word"><strong></strong></span></h3>
       <h3>Letters Already Guessed = <span id="letters-guessed"><strong></strong></span></h3>
       <h3>Number of Guesses Remaining = <span id="guess-remaining"><strong>13</strong></span></h3>
@@ -16,161 +16,134 @@
 
     <script>
 
-    var myArray = ["nick", "rob", "brian"];
+    // Variables
+    var myArray = ["broncos", "nuggets", "avalanche", "rockies", "buffaloes", "rams", "pioneers"];
     var word = document.getElementById('word');
     var guess = document.getElementById('letters-guessed');
     var guessRemaining = document.getElementById('guess-remaining');
     var wins = document.getElementById('wins');
+    var winsCount = 0;
     var wordArray = [];
-    var arrayCount = 0;
     var guessCount = 13;
-    var guessArray = [];
+    var missedGuessArray = [];
+    var usedLetterArray = [];
     var randomWord = myArray[getRandomNumber()];
     console.log(randomWord);
 
+    // Appending wordArray with each letter of randomWord
     appendWordArray(randomWord);
-    word.textContent = wordArray.join(" ");
-    guess.textContent = guessArray.join(" ");
-    wins.textContent = 0;
-    
 
+    // Displaying the contents of wordArray (a dash for each letter in randomWord)
+    word.innerHTML = wordArray.join(" ");
+
+    // Displaying the contents of guessArray (empty to start - no dashes)
+    guess.innerHTML = missedGuessArray.join(" ");
+
+    // Displaying the win total to start the game
+    wins.innerHTML = 0;
+    
+    // Function to return a new word after the first game
     function getRandomWord() {
       var newWord = myArray[getRandomNumber()];
       return newWord;
       console.log(newWord);
     }
 
+    // Function to append wordArray with a dash for every letter in randomWord. Takes in a string (randomWord)
     function appendWordArray(str) {
       for (i = 0; i < str.length; i++) {
         wordArray.push("_ ");
       }
     }
 
+    // Function to get a random number to be used as the index to get a random word out of wordArray
     function getRandomNumber() {
       return Math.floor(Math.random() * myArray.length);
     }
 
+    // Resets game
     function resetGame() {
       randomWord = getRandomWord();
           
-      guessRemaining.textContent = 13;
-      guessCount = 14;
-      guessCount -= 1;
+      guessCount = 13;
+      guessRemaining.innerHTML = guessCount;
       wordArray = [];
-      guessArray = [];
-
+      missedGuessArray = [];
+      usedLetterArray = [];
       appendWordArray(randomWord);
       console.log(randomWord);
       
-      word.textContent = wordArray.join(" ");
-      guess.textContent = guessArray.join(" ");
+      word.innerHTML = wordArray.join(" ");
+      guess.innerHTML = missedGuessArray.join(" ");
     }
      
 
     document.onkeyup = function(event) {
+  
+      // If key selected hasn't been used
+      if (!usedLetterArray.includes(event.key)) {
 
-        guessRemaining.textContent = guessCount;
+        // Append usedLetterArray with key selected
+        usedLetterArray.push(event.key);
+        
+        // Decrease guessCount
         guessCount -= 1;
 
-        var index = randomWord.indexOf(event.key);
+        // Display new guessCount
+        guessRemaining.innerHTML = guessCount;
 
-        if (randomWord.includes(event.key)) {
-
-          wordArray[index] = event.key;
-          word.textContent = wordArray.join(" ");
-          console.log(wordArray);
-
-        } else {
-
-          arrayCount += 1
-          guessArray[arrayCount - 1] = event.key;
-          guess.textContent = guessArray.join(" ");
-
-        }
-
-        if (wordArray.join("") === randomWord) {
-          alert('you win!');
-
-          // wins.textContent += 1;
-
-          resetGame();
-          
-        }
-
-        if (Number(guessRemaining.textContent) < 1) {
-          
-          alert('you lose!');
-
-          resetGame();
-
-        }
-      
-      
-
-      
-
-
-
-      // for (i = 0; i < dashArray.length; i++) {
-      //   dashArray[i] = event.key;
-      //   dashes.textContent = dashArray.join(" ");
-      // }
-
-      
-
-      // myGuess.textContent = event.key;
-      // cpuGuess.textContent = myArray[getRandomNumber()];
-      // var letterCount = cpuGuess.textContent.length;
-      // letters.textContent = letterCount;
-
-      // for (i = 0; i < cpuGuess.textContent.length; i++) {
-      //   dashArray.push("_ ");
-      // }
-      
-
-    }
-
-
-
-
-
-    // var w = 0;
-    // var l = 0;
-    // var t = 0;
-
-    // function getRandomNumber() {
-    //   return Math.floor(Math.random() * 3);
-    // }
-
-    // function updateGame(x, y, z) {
-    //   if (x === 'p' && y === 'r' || x === 'r' && y === 's' || x === 's' && y === 'p') {
-
-    //     w += 1;
-    //     document.getElementById('wins').innerHTML = w;
+      } else {
+        alert(`You already guessed '${event.key}'!`);
+      }
         
-    //   } else if (x === 'p' && y === 's' || x === 'r' && y === 'p' || x === 's' && y === 'r') {
+      // Check if key selected equals each letter of randomWord
+      for (i = 0; i < randomWord.length; i++) {
 
-    //     l += 1;
-    //     document.getElementById('losses').innerHTML = l;
+        if (event.key === randomWord[i]) {
 
+          // If yes, change index value of wordArray from "_ " to key selected
+          wordArray[i] = event.key;
 
-    //   } else {
+          // Display updated wordArray
+          word.innerHTML = wordArray.join(" ");
 
-    //     t += 1;
-    //     document.getElementById('ties').innerHTML = t;
+        }
 
-    //   }
+      }
+        
+      // If randomWord doesn't include the key selected AND guessArray doesn't include the key selected
+      if (!randomWord.includes(event.key) && !missedGuessArray.includes(event.key)) {
+        
+        // Add key selected to end of guessArray
+        missedGuessArray.push(event.key);
+
+        // Display updated guessArray
+        guess.innerHTML = missedGuessArray.join(" ");
       
-    // };
+      } 
 
+      // If wordArray (correct guesses) = randomWord
+      if (wordArray.join("") === randomWord) {
+        alert('you win!');
 
-    // document.onkeyup = function(event) {
-    //   myGuess.textContent = event.key;
-    //   cpuGuess.textContent = myArray[getRandomNumber()];
+        winsCount += 1;
+        document.getElementById('wins').innerHTML = winsCount;
 
-    //   updateGame(myGuess.textContent, cpuGuess.textContent, t);
+        resetGame();
+        
+      }
 
-    // };
+      // If guesses remaining is less than 1
+      if (Number(guessRemaining.innerHTML) < 1) {
+        
+        alert('you lose!');
+
+        resetGame();
+
+      }
+      
+
+    };
 
     </script>
 
