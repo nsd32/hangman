@@ -4,31 +4,60 @@
     <meta charset="UTF-8">
     <title>Hangman</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+
   </head>
   <body>
     <div class="container">
-      <h1>Press Any Key To Get Started!</h1>
-      <h3>Wins = <text id="wins">0</text></h3>
-      <h3>Current Word = <span id="word"><strong></strong></span></h3>
-      <h3>Letters Already Guessed = <span id="letters-guessed"><strong></strong></span></h3>
-      <h3>Number of Guesses Remaining = <span id="guess-remaining"><strong>13</strong></span></h3>
-    </div>
+      <div class="row">
+        <div class="col-sm-7">
+          <h1>Hangman!</h1><span>Press any letter to get started</span>
+          <h3>Current Word = <span id="word"></span></h3>
+          <h3>Letters Already Guessed = <span id="letters-guessed"></span></h3>
+          <h3>Number of Guesses Remaining = <span id="guess-remaining">6</span></h3>
+          <h3>Wins = <text id="wins">0</text></h3><br /><br />
+          
+        </div>
+        <div class="col-sm-5">
+          <div id="image-div">
+            <img src="" id="img-src" class="img-responsive" />
+          </div>
+        </div>
+
+      </div> <!-- row -->
+
+      <div class="row">
+        <div class="col-sm-12">
+          <button type="button" class="btn btn-default" id="button">Play Again!</button>
+        </div>
+      </div>
+     
+    </div> <!-- container -->
 
     <script>
 
     // Variables
-    var myArray = ["broncos", "nuggets", "avalanche", "rockies", "buffaloes", "rams", "pioneers"];
+    var myArray = [["broncos", "assets/images/broncos.png"], ["nuggets", "assets/images/nuggets.jpg"], ["avalanche", "assets/images/avalanche.jpg"], ["rockies", "assets/images/rockies.png"], ["buffaloes", "assets/images/buffaloes.jpg"], ["rams", "assets/images/rams.png"], ["pioneers", "assets/images/pioneers.jpg"]];
+
     var word = document.getElementById('word');
     var guess = document.getElementById('letters-guessed');
     var guessRemaining = document.getElementById('guess-remaining');
     var wins = document.getElementById('wins');
-    var winsCount = 0;
+    
     var wordArray = [];
-    var guessCount = 13;
+    var guessCount = 6;
+    var winsCount = 0;
     var missedGuessArray = [];
     var usedLetterArray = [];
-    var randomWord = myArray[getRandomNumber()];
+    var wordInfoArray = myArray[getRandomNumber()];
+    var randomWord = wordInfoArray[0];
+    var randomWordImage = wordInfoArray[1];
+    var loserImage = "assets/images/loser.jpeg"
+    var winAudio = new Audio('assets/music/tumblr_m4z6fjOaDA1qe5g8ko1.mp3');
+    var loseAudio = new Audio('assets/music/loser.mp3');
     console.log(randomWord);
+    console.log(randomWordImage);
 
     // Appending wordArray with a "_ " for each letter of randomWord
     appendWordArray(randomWord);
@@ -44,10 +73,21 @@
     
     // Function to return a new word after the first game
     function getRandomWord() {
-      var newWord = myArray[getRandomNumber()];
-      return newWord;
+      var newArray = myArray[getRandomNumber()];
+      var newWord = newArray[0];
+      newArray.push(newWord);
+      var newImage = newArray[1];
+      newArray.push(newImage);
+
+      return newArray;
       console.log(newWord);
     }
+
+    // User taps button to reset game after a win
+    document.getElementById("button").addEventListener("click", function() {
+      resetGame();
+      audioPause();
+    });
 
     // Function to append wordArray with a dash for every letter in randomWord. Takes in a string (randomWord)
     function appendWordArray(str) {
@@ -63,25 +103,42 @@
 
     // Resets game
     function resetGame() {
-      randomWord = getRandomWord();
+
+      var newWordAndImage = getRandomWord()
+      randomWord = newWordAndImage[0];
+      randomWordImage = newWordAndImage[1];
           
-      guessCount = 13;
+      guessCount = 6;
       guessRemaining.innerHTML = guessCount;
       wordArray = [];
       missedGuessArray = [];
       usedLetterArray = [];
       appendWordArray(randomWord);
       console.log(randomWord);
+      console.log(randomWordImage);
       
       word.innerHTML = wordArray.join(" ");
       guess.innerHTML = missedGuessArray.join(" ");
+      document.getElementById('img-src').src = "";
+      // audio.pause();
+    
+    }
+
+    function audioPause() {
+      if (wordArray.includes("_ ")) {
+        winAudio.pause();
+        winAudio.currentTime = 0.0;
+        loseAudio.pause();
+        loseAudio.currentTime = 0.0;
+      }
     }
      
+  
 
     document.onkeyup = function(event) {
   
       // If key selected hasn't been used
-      if (!usedLetterArray.includes(event.key)) {
+      if (!usedLetterArray.includes(event.key) && !randomWord.includes(event.key)) {
 
         // Append usedLetterArray with key selected
         usedLetterArray.push(event.key);
@@ -92,9 +149,7 @@
         // Display new guessCount
         guessRemaining.innerHTML = guessCount;
 
-      } else {
-        alert(`You already guessed '${event.key}'!`);
-      }
+      } 
         
       // Check if key selected equals each letter of randomWord
       for (i = 0; i < randomWord.length; i++) {
@@ -123,27 +178,30 @@
       } 
 
       // If wordArray (correct guesses) = randomWord
-      if (wordArray.join("") === randomWord) {
-        alert('you win!');
-
-        winsCount += 1;
-        document.getElementById('wins').innerHTML = winsCount;
-
-        resetGame();
+      if (wordArray.join("") === randomWord && !wordArray.includes("_ ")) {
+        // alert('you win!');
         
-      }
+        winsCount++
+        document.getElementById('wins').innerHTML = winsCount;
+        document.getElementById('img-src').src = randomWordImage;
+        
+        winAudio.play();
+
+      } 
+
+      
 
       // If guesses remaining is less than 1
       if (Number(guessRemaining.innerHTML) < 1) {
-        
-        alert('you lose!');
 
-        resetGame();
+        document.getElementById('img-src').src = loserImage;
+        loseAudio.play();
 
       }
       
 
     };
+  
 
     </script>
 
