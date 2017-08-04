@@ -44,12 +44,6 @@
       console.log(newWord);
     }
 
-    // User taps button to reset game after a win
-    // document.getElementById("button").addEventListener("click", function() {
-    //   resetGame();
-    //   audioPause();
-    // });
-
     // Function to append wordArray with a dash for every letter in randomWord. Takes in a string (randomWord)
     function appendWordArray(str) {
       for (i = 0; i < str.length; i++) {
@@ -84,18 +78,8 @@
       // audio.pause();
     
     }
-
-    function audioPause() {
-      if (wordArray.includes("_ ")) {
-        winAudio.pause();
-        winAudio.currentTime = 0.0;
-        loseAudio.pause();
-        loseAudio.currentTime = 0.0;
-      }
-    }
      
   
-
     document.onkeyup = function(event) {
   
       // If key selected hasn't been used
@@ -139,7 +123,7 @@
       } 
 
       // If wordArray (correct guesses) = randomWord
-      if (wordArray.join("") === randomWord && !wordArray.includes("_ ")) {
+      if (wordArray.join("") === randomWord) {
         // alert('you win!');
         
         winsCount++
@@ -153,7 +137,7 @@
 
 
       // If guesses remaining is less than 1
-      if (Number(guessRemaining.innerHTML) < 1) {
+      if (guessRemaining.innerHTML < 1) {
 
         document.getElementById('img-src').src = loserImage;
         loseAudio.play();
