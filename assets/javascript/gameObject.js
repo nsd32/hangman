@@ -9,7 +9,7 @@ var game = {
   winsCount: 0,
   missedGuessArray: [], // Missed guesses get appended to this array and displayed to the user
   usedLetterArray: [], // Will hold letters that are guessed AND aren't in the randomWord. Used to decrease guess count only if the key hasn't been selected yet.
-  wordInfoArray: [], // Will hold the selected nested array in gameArray
+  nestedArray: [], // Will hold the selected nested array in gameArray
   loserImage: "assets/images/loser.jpeg",
   winAudio: new Audio("assets/music/winner.mp3"),
   loseAudio: new Audio("assets/music/loser.mp3"),
@@ -63,12 +63,12 @@ var game = {
 
 };
 
-    game.wordInfoArray = game.gameArray[game.getRandomNumber()]; // Selecting a random nested array from gameArray
+    game.nestedArray = game.gameArray[game.getRandomNumber()]; // Selecting a random nested array from gameArray
 
-    game.randomWord = game.wordInfoArray[0]; // Selecting the first item in the nested array (randomWord)
+    game.randomWord = game.nestedArray[0]; // Selecting the first item in the nested array (randomWord)
     console.log(game.randomWord);
 
-    game.randomWordImage = game.wordInfoArray[1]; // Selecting the the second item in the nested array (image)
+    game.randomWordImage = game.nestedArray[1]; // Selecting the the second item in the nested array (image)
     console.log(game.randomWordImage);
 
     // Appending wordArray with a "_ " for each letter of randomWord
@@ -146,6 +146,6 @@ var game = {
         game.loseAudio.play();
         game.resetGame();
 
-      }    
+      }  
 
     };
