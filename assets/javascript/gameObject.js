@@ -135,7 +135,8 @@ var game = {
         document.getElementById('img-src').src = game.randomWordImage;
         
         game.winAudio.play();
-        game.resetGame();
+
+        setTimeout(game.resetGame());
 
       } 
 
@@ -144,7 +145,8 @@ var game = {
 
         document.getElementById('img-src').src = game.loserImage;
         game.loseAudio.play();
-        game.resetGame();
+        
+        setTimeout(game.resetGame(), 10000);
 
       }  
 

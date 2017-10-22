@@ -81,6 +81,8 @@
      
   
     document.onkeyup = function(event) {
+      winAudio.load();
+      loseAudio.load();
   
       // If key selected hasn't been used
       if (!usedLetterArray.includes(event.key) && !randomWord.includes(event.key)) {
@@ -141,7 +143,7 @@
 
         document.getElementById('img-src').src = loserImage;
         loseAudio.play();
-        resetGame();
+        resetGame()
 
       }
       
