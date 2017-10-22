@@ -1,10 +1,16 @@
-#image-div {
+/*#image-div {
 	margin: 20px 0 20px 0;
-}
+}*/
 
 body {
 	
-	background-image: url('../images/sports-wave.jpg');
-	color: #fff;
+	background-image: url('../images/background.jpeg');
+	
 	margin-top: 40px;
+}
+
+.content {
+	color: #000;
+	background-color: #fff;
+	border-radius: 25px;
 }
